@@ -1,0 +1,11 @@
+This was for a graduate computer science course aimed towards computational sciences. The website can be found here: www.eecs.berkeley.edu/~colella/CS294_73F2011/.
+
+We were taught the different motifs of Computational Sciences
+1. Structured Grids
+2. Unstructured Grids
+3. Fast Fourier Transforms
+4. Sparse Linear Algebra
+5. Dense Linear Algebra
+6. Particle Methods
+
+In this repo is the homework that we did and the final project where we attempted to reproduce a paper by Dr. Phillip Colella.

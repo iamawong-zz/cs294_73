@@ -1,0 +1,50 @@
+\documentclass[11pt]{article}
+%\input epsf
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+%\usepackage{multicol}
+%\input{/Users/colella/Desktop/ChomboDoc/Common/preamble.tex}
+%\input{/Users/colella/Desktop/ChomboDoc/Common/macros.tex}
+\newcommand{\jbold}{{\boldsymbol{j}}}
+\newcommand{\kbold}{{\boldsymbol{k}}}
+\oddsidemargin=-.125in
+\evensidemargin=-.125in
+\textwidth=6.5in
+\topmargin=-.5in
+\textheight=8.5in
+\parskip 3pt
+\nonfrenchspacing
+\title{Periodic Poisson Solver}
+\begin{document}
+\maketitle
+\noindent
+We want to compute the solution to the discretized Poisson equation on the unit square with periodic boundary conditions.
+\begin{gather*}
+(\Delta^{(h)} f)_\jbold \equiv  \frac{1}{h^2} (-4 f_\jbold + f_{\jbold + (1,0)} + f_{\jbold + (-1,0)} + f_{\jbold + (0,1)} +f_{\jbold + (0,-1)}) = \rho_\jbold\\ 
+\jbold = (j_0,j_1) ~,~ 0 \leq j_0,j_1 < N-1 ~,~ h = \frac{1}{N}
+\end{gather*}
+We do this using the complex FFT in two dimensions.
+\begin{enumerate}
+\item
+Compute the forward FFT
+\begin{gather*}
+\hat{\rho}_\kbold = \mathcal{F}_N(\rho)_\kbold = \sum \limits_{0 \leq j_0,j_1 < N-1} \rho_{\jbold} z^{\jbold \cdot \kbold} ~,~ \kbold = (k_0,k_1) ~,~ 0 \leq k_0,k_1 < N-1
+\end{gather*}
+Uses {\tt FFTMD::forwardCC}.
+\item
+Divide the Fourier coefficients by the symbol of the operator $\Delta^{(h)}$.
+\begin{align*}
+\hat{f}_\kbold = &  \frac{\hat{\rho_\kbold}}{2cos(2 \pi k_0 h) - 2 cos(2 \pi k_1 h) - 4} \hbox{ if } \kbold \neq (0,0)
+\\ = & 0 \hbox{ if } \kbold = (0,0)
+\end{align*}
+Done as a {\tt for} loop.
+\item
+Take the inverse Fourier transform, and normalize.
+\begin{gather*}
+f_\jbold = \frac{1}{N^2}\mathcal{F}_N^{-1}(\hat{f})_\jbold ~,~ 0 \leq j_0,j_1 < N-1
+\end{gather*}
+Uses {\tt FFTMD::inverseCC}.
+\end{enumerate}
+\end{document}
+
